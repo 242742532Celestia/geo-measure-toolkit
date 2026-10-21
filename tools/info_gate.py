@@ -64,7 +64,7 @@ from typing import Iterable
 #    看着像文档写错，**真相是工具崩了**。
 #    本文件 2026-10-06 加 🔴 前缀的断言时当场踩到（`info_gate` 一直没有这行）。
 try:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(errors="replace")
 except Exception:  # noqa: BLE001
     pass
 

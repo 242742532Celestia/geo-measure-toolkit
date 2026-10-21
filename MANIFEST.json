@@ -2,15 +2,15 @@
   "package": {
     "name": "geo-measure-toolkit",
     "version": "1.0.0",
-    "built_at": "2026-10-21T22:09:57+08:00",
+    "built_at": "2026-10-21T23:05:53+08:00",
     "description": "Measurement and judgment toolkit for Generative Engine Optimization (GEO) experiments: power/MDE inversion, statistical lint rules, tautology audit, prompt freezing, feature extraction and the information-preservation gate."
   },
   "tools": [
     {
       "path": "tools/statpower.py",
       "role": "Power/MDE inversion kernel: mde_* / n_required_* / deff / wilson_ci / permutation_p",
-      "sha256": "9c7e8361efb91f91ce7c169bd654d19f264f0fdbe2ad3c64ee8d726214ec8d9b",
-      "bytes": 25161,
+      "sha256": "4e5bbe75f0da857ba2629aec78b793bfeffcc32198d62d539ad6a11329800443",
+      "bytes": 25654,
       "selftest": {
         "args": [
           "selftest"
@@ -34,8 +34,8 @@
     {
       "path": "tools/geo_stat_lint.py",
       "role": "Six statistical lint rules L1-L6 (no-interval / below-noise / rare-binary-r / cluster-as-independent / uninterpretable-null / under-identified)",
-      "sha256": "08756d884299579e2b97d7840a1eae209912e5ae1011112feb5c7348ed97f4bc",
-      "bytes": 23880,
+      "sha256": "fa5f7657038068ef18bda6f71fbdd106b77a927950fdecc1d0e04ee3edab35f2",
+      "bytes": 24380,
       "selftest": {
         "args": [
           "selftest"
@@ -59,8 +59,8 @@
     {
       "path": "tools/tautology_audit.py",
       "role": "Tautology audit: leakage score L(T,Y) with four severity bands",
-      "sha256": "102f9d97b6d653177e7127b1ca69ca7301ba4695a8bdfc95893f165eafc69f14",
-      "bytes": 20228,
+      "sha256": "d0494dc88998640c60baaa2e7b2083fcdcc1a13164c79812b0fd5e4c7b2b8365",
+      "bytes": 20728,
       "selftest": {
         "args": [
           "--selftest"
@@ -84,8 +84,8 @@
     {
       "path": "tools/freeze_prompts.py",
       "role": "Prompt freezing + --verify: snapshot + sha256, the basis for rebuilding paired runs",
-      "sha256": "af9009abcc4eaa10eb3482e26fb2b805ea47b8a09e3af7d2420375f18864a34a",
-      "bytes": 46112,
+      "sha256": "1e6caaca199aed1b9689b5d1ca4eb23b27fa2ace05d335549158d5d5df382feb",
+      "bytes": 46094,
       "selftest": {
         "args": [
           "--selftest"
@@ -109,8 +109,8 @@
     {
       "path": "tools/geo_page_features.py",
       "role": "Page-level candidate feature extractor (no scores, no weights, no grades)",
-      "sha256": "c98144f16db219ae470ba10fdf4ca897faac674ec4afac8cdde6584c9955ce96",
-      "bytes": 51559,
+      "sha256": "0a8acb8c5f7ee1cceab313f8f647a9c89d19e5200a72907e19e0683817cae37f",
+      "bytes": 52059,
       "selftest": {
         "args": [
           "--selftest"
@@ -134,8 +134,8 @@
     {
       "path": "tools/info_gate.py",
       "role": "Information-preservation gate G1-G9 for free-text rewrites",
-      "sha256": "a65f48a609dc2e14fb3306450ad67de5057c631b66040a608e17f6869734782b",
-      "bytes": 43917,
+      "sha256": "2e293c319b44a3c26a876570e2c42e0264c04bddc9893e3d990438d32f40822e",
+      "bytes": 43899,
       "selftest": {
         "args": [
           "--selftest"
@@ -159,8 +159,8 @@
     {
       "path": "tools/info_gate_selfcontained_check.py",
       "role": "Self-consistency proof: hides the optional external reference module, then re-runs the key paths",
-      "sha256": "9e66bc7a0e1a535c3e8c3d453eeefd00f1f40afbadd4c705e2d3dfa3f3190892",
-      "bytes": 6214,
+      "sha256": "95d9d6eb69e8182fca138ab92618e917fa8aab0202586b834c66096f3f933b20",
+      "bytes": 6196,
       "selftest": {
         "args": [],
         "scope": "standalone",
@@ -182,8 +182,8 @@
     {
       "path": "examples/08_reproduce_geo_bench.py",
       "role": "Reproduces the official GEO-bench harness (rate limiter, retry, verification)",
-      "sha256": "6e0d52a153f92aee1ad285a4d3705b185b05fc570a74b17622706986f07788c6",
-      "bytes": 106328,
+      "sha256": "3be04c930ce4c51a1e743a8ef3870c276f63738a0323b1dee8831ada024476c0",
+      "bytes": 106828,
       "selftest": null,
       "tier": "-",
       "verification": "⚠ No self-test entry -- verification gap; confirm by hand before relying on it"
@@ -191,8 +191,8 @@
     {
       "path": "examples/10_citation_noise.py",
       "role": "Re-measures run-to-run noise on the citation-rate outcome",
-      "sha256": "4245ef721fa1bc1bbc0bb4d2d157d11ee403bad18f467a07f949d294639ef743",
-      "bytes": 32715,
+      "sha256": "98b9c6320e9c808826ad770ef1ce9c0d644003a632bdd35a823e8022195fc484",
+      "bytes": 33215,
       "selftest": {
         "args": [
           "--selftest"
@@ -216,8 +216,8 @@
     {
       "path": "examples/11_construct_validity.py",
       "role": "Construct validity: is the measurement measuring what we claim?",
-      "sha256": "0164f7fdf5ca6ae48fd146ffc9d481f784fd2930d8f05c049d34d4d07c925535",
-      "bytes": 19662,
+      "sha256": "ec7a96504b6e7b1b83e607be25aa93e07ea493b0537685bcdfcb29c81ab5a470",
+      "bytes": 20155,
       "selftest": {
         "args": [
           "--selftest"
@@ -241,8 +241,8 @@
     {
       "path": "examples/12_probe_site_facts.py",
       "role": "Probes site-level facts for a list of domains",
-      "sha256": "c798499b2db8d357f7e8dc349c3bfdad02e18a86b83e3aae47f591040037176e",
-      "bytes": 19542,
+      "sha256": "41d9ddc8b7959f1c4c8bc54405f603d3c357092beef37b620120b2096f04725c",
+      "bytes": 20042,
       "selftest": {
         "args": [
           "--selftest"
@@ -266,8 +266,8 @@
     {
       "path": "examples/13_infrastructure_survey.py",
       "role": "Splits literature into infrastructure layer vs method layer",
-      "sha256": "5f53824e983124ce0b3e904745de855120debfb5ba2c02b623f65881ef7c92b9",
-      "bytes": 20145,
+      "sha256": "9c90a58b2c911f80b8d2d528beead7bfc64489d81a48c3b56ab7eb1536988dfd",
+      "bytes": 20645,
       "selftest": {
         "args": [
           "--selftest"
@@ -291,8 +291,8 @@
     {
       "path": "examples/14_stage_a_variance.py",
       "role": "Variance decomposition sigma_b / sigma_e with a synthetic-data recovery self-test",
-      "sha256": "fbc3156bba509a16862ad8fb74b6b67bca9a473a54335e7763fba7791de001e7",
-      "bytes": 51311,
+      "sha256": "1ba9d5bcb8fc45c5c2d1d6cad072b784910dc92879058e7e4bf40d1d16c527a7",
+      "bytes": 51811,
       "selftest": {
         "args": [
           "--selftest"
@@ -316,8 +316,8 @@
     {
       "path": "examples/17_extend_geobench_cache.py",
       "role": "Extends the official GEO-bench query cache without changing the filter rule",
-      "sha256": "afdc0d939720bb2d0c8d3e613ac664c2c170ec28d596cd231e7748e5aec3e5e3",
-      "bytes": 8478,
+      "sha256": "63fafbf2d9cd627d8efd13c6287fda862a7ecb529b57940c2c392a00cfbfd03c",
+      "bytes": 8460,
       "selftest": {
         "args": [
           "--selftest"
@@ -341,8 +341,8 @@
     {
       "path": "examples/19_paired_analysis.py",
       "role": "Paired analysis main program (Holm correction, paired_t degenerate semantics)",
-      "sha256": "80da6eeb81c13f7dcade53cbc47b1cb9a222c14a78cd7c156187435bd4a0631f",
-      "bytes": 62651,
+      "sha256": "4d01fbf6102c7e04edc9e1936bb37ed5d6daa93033cb6c1dc4b15f0bca26d4fb",
+      "bytes": 62633,
       "selftest": {
         "args": [
           "--selftest"
@@ -366,8 +366,8 @@
     {
       "path": "examples/20_rewriter_noise.py",
       "role": "Measures the noise a rewriting system introduces",
-      "sha256": "0b7ff747c6d423db64123b720cf83924a98ef1f5a0eb892eba56e95c6831b260",
-      "bytes": 15308,
+      "sha256": "ff495929e19897b78494b9bc0c618e4fd0c50a09fa416c35e72e8b41884a05c6",
+      "bytes": 15290,
       "selftest": {
         "args": [
           "--selftest"
@@ -391,8 +391,8 @@
     {
       "path": "examples/23_e4_sequential.py",
       "role": "Sequential stopping rules S1/S2/S3 over a balanced prefix",
-      "sha256": "d66b2bf3cd59d79d36e2d7cde8f6cd6d55f3f42066345be0a5144777ef8eb512",
-      "bytes": 17982,
+      "sha256": "0c0418cb7cf315a8ed0d938416464f47b8ce80297e31668908cb723981fa774d",
+      "bytes": 17964,
       "selftest": {
         "args": [
           "--selftest"
@@ -416,8 +416,8 @@
     {
       "path": "examples/24_e4_noise_floor.py",
       "role": "Variance decomposition + arithmetic lower bound on MDE",
-      "sha256": "d79af4d1c71a3b8267dcf70014376010fb00edf5f635088c318b3d6ce79e11b7",
-      "bytes": 12596,
+      "sha256": "ddc22b06fd6bbfa15fe92adb06691c6f61f1766ea839af8edd3c78683d21e70a",
+      "bytes": 12578,
       "selftest": {
         "args": [
           "--selftest"

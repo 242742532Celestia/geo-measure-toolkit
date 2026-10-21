@@ -47,6 +47,13 @@ import argparse
 import json
 import sys
 from typing import Any, Dict, List
+# ── 控制台编码兜底 ────────────────────────────────────────────────
+# Windows 控制台默认 GBK 码页，打印 ✅/⚠/❌/🔴/⇒/² 这类字符会 UnicodeEncodeError 崩溃。
+# 这里把「无法编码」改成「替换显示」而不是抛异常；UTF-8 环境（Linux/macOS/CI）下是空操作。
+try:
+    sys.stdout.reconfigure(errors="replace")
+except Exception:
+    pass
 
 # 泄漏度分档（预注册）。左闭右开，边界值一律归入更严的一档。
 #   L = 0          -> CLEAN

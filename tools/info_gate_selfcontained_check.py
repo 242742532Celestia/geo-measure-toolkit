@@ -28,7 +28,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stdout.reconfigure(errors="replace")
 
 #: 包外参考模块目录。🔴 2026-10-21 开源化：改为**可选**的环境变量
 #: `GEO_CORE_PATH`（原先是作者机器上的绝对路径）。

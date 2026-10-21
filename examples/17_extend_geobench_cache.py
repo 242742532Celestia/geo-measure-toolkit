@@ -51,7 +51,7 @@ def main(argv=None) -> int:
     # Windows 控制台默认 GBK，中文/emoji 会抛 UnicodeEncodeError -> 切 UTF-8
     for _s in (sys.stdout, sys.stderr):
         try:
-            _s.reconfigure(encoding="utf-8", errors="replace")
+            _s.reconfigure(errors="replace")
         except Exception:  # noqa: BLE001
             pass
     p = argparse.ArgumentParser(

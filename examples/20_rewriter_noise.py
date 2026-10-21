@@ -294,7 +294,7 @@ def selftest() -> int:
 def main(argv=None) -> int:
     try:
         _sys = sys.stdout
-        _sys.reconfigure(encoding="utf-8", errors="replace")
+        _sys.reconfigure(errors="replace")
     except Exception:  # noqa: BLE001
         pass
     p = argparse.ArgumentParser(

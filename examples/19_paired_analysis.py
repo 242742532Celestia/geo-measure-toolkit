@@ -760,7 +760,7 @@ def render(rep: dict) -> str:
 def main(argv=None) -> int:
     for _s in (sys.stdout, sys.stderr):
         try:
-            _s.reconfigure(encoding="utf-8", errors="replace")
+            _s.reconfigure(errors="replace")
         except Exception:  # noqa: BLE001
             pass
     p = argparse.ArgumentParser(

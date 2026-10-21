@@ -61,7 +61,7 @@ ROOT = Path(__file__).resolve().parent.parent
 #    而文档里声明的是 83。一致性核对据此报「文档写错」，
 #    **真相是脚本崩了**。这类「数字不符」必须先分清是文档错还是工具崩。
 try:
-    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stdout.reconfigure(errors="replace")
 except Exception:  # noqa: BLE001
     pass
 PROMPT_DIR = ROOT / "prompts"

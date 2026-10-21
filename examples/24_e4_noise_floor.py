@@ -37,7 +37,7 @@ ROOT = os.path.dirname(HERE)
 for _p in (os.path.join(ROOT, "examples"), os.path.join(ROOT, "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
-sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stdout.reconfigure(errors="replace")
 
 Z_SUM = 1.959964 + 0.841621
 PRIMARY_A = "evidence_fabricated"

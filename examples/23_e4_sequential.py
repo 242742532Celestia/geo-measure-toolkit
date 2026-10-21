@@ -31,7 +31,7 @@ for _p in (os.path.join(ROOT, "examples"), os.path.join(ROOT, "tools")):
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stdout.reconfigure(errors="replace")
 
 # --- 预注册常量（改任何一个都必须递增 the method spec 版本号并记 amendment）
 PRIMARY_A = "evidence_fabricated"

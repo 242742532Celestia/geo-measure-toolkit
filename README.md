@@ -1,6 +1,6 @@
 # geo-measure-toolkit
 
-[![selftest](https://github.com/__REPO_OWNER__/geo-measure-toolkit/actions/workflows/selftest.yml/badge.svg)](https://github.com/__REPO_OWNER__/geo-measure-toolkit/actions/workflows/selftest.yml)
+[![selftest](https://github.com/242742532Celestia/geo-measure-toolkit/actions/workflows/selftest.yml/badge.svg)](https://github.com/242742532Celestia/geo-measure-toolkit/actions/workflows/selftest.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Measurement and judgment tooling for **Generative Engine Optimization (GEO)** experiments —
@@ -227,7 +227,7 @@ If you use this toolkit in published work, please cite it — the metadata lives
 ### Before you publish this repo
 
 The GitHub account is the one thing this repository cannot know. It is left as a
-single placeholder (`__REPO_OWNER__`) in `CITATION.cff` and in the README badge, so
+single placeholder (`242742532Celestia`) in `CITATION.cff` and in the README badge, so
 it can be filled in exactly once, in exactly one place:
 
 ```bash

@@ -1,0 +1,55 @@
+name: selftest
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+# 🔴 这个 workflow 的存在意义：**让「自证」变成持续的，而不是一次性的。**
+#    README 上写「569 条断言全绿」是一句可以被时间冲掉的话；
+#    每次 push 都跑一遍，它才是事实。
+#
+#    失败时不要只看红叉 —— 看是哪一类：
+#      · 断言不成立  -> 工具的行为变了，先查工具
+#      · 少跑了断言  -> 静默失检，最危险的一类
+#      · 崩在自检中途 -> 工具崩了
+
+jobs:
+  selftest:
+    name: selftest (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 工具链是纯标准库，最低 3.9（已用 ast feature_version=(3,9) 校验过语法）
+        python-version: ["3.9", "3.11", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Self-test
+        run: python run_selftests.py
+
+      - name: Dependency closure audit
+        run: python scripts/check_deps.py
+
+  release-hygiene:
+    name: release hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # 与 MANIFEST.json 的构建版本一致（项数是在哪个版本上量的，就用哪个量）
+          python-version: "3.14"
+
+      - name: Release hygiene (CITATION / license / badge)
+        run: python scripts/check_release.py
+
+      - name: Registry matches reality
+        run: python tools/build_manifest.py --check

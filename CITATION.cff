@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this toolkit in published work, please cite it as below."
+title: "geo-measure-toolkit"
+abstract: >-
+  Measurement and judgment tooling for Generative Engine Optimization (GEO)
+  experiments: power/MDE inversion, six statistical lint rules, a tautology
+  audit for treatment arms that mechanically rewrite their own outcome, prompt
+  freezing for rebuilding paired arms, score-free candidate feature extraction,
+  and an information-preservation gate for free-text rewrites. Pure standard
+  library; no numpy, scipy or matplotlib.
+authors:
+  - family-names: "一左一右"
+    email: "242742532@qq.com"
+version: 1.0.0
+date-released: "2026-10-21"
+license: MIT
+repository-code: "https://github.com/__REPO_OWNER__/geo-measure-toolkit"
+keywords:
+  - generative engine optimization
+  - GEO
+  - statistical power analysis
+  - minimum detectable effect
+  - measurement validity
+  - reproducibility
+  - information preservation

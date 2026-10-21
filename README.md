@@ -1,5 +1,8 @@
 # geo-measure-toolkit
 
+[![selftest](https://github.com/__REPO_OWNER__/geo-measure-toolkit/actions/workflows/selftest.yml/badge.svg)](https://github.com/__REPO_OWNER__/geo-measure-toolkit/actions/workflows/selftest.yml)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Measurement and judgment tooling for **Generative Engine Optimization (GEO)** experiments —
 power/MDE inversion, statistical lint rules, tautology auditing, prompt freezing,
 feature extraction, and an information-preservation gate.
@@ -201,10 +204,40 @@ silently lost checks.
 
 ## Requirements
 
-* Python 3.9+ (developed and tested on 3.14)
+* Python 3.9+ (developed and tested on 3.14; CI runs 3.9 / 3.11 / 3.13 / 3.14)
 * No third-party packages for the core tools
 * Network access only for `examples/12_probe_site_facts.py` (site probing) and
   `examples/17_extend_geobench_cache.py` (downloading the official benchmark cache)
+
+## Citing
+
+If you use this toolkit in published work, please cite it — the metadata lives in
+[`CITATION.cff`](CITATION.cff):
+
+```bibtex
+@software{geo-measure-toolkit,
+  title  = {geo-measure-toolkit},
+  author = {一左一右},
+  year   = {2026},
+  version = {1.0.0},
+  license = {MIT}
+}
+```
+
+### Before you publish this repo
+
+The GitHub account is the one thing this repository cannot know. It is left as a
+single placeholder (`__REPO_OWNER__`) in `CITATION.cff` and in the README badge, so
+it can be filled in exactly once, in exactly one place:
+
+```bash
+python scripts/set_repo_url.py --owner YourGitHubHandle
+python scripts/check_release.py     # must pass
+```
+
+`check_release.py` verifies that the citation metadata, the licence, the registry
+version and the badge all point at the same repository — and that the link to the
+**official** GEO-bench repository has not been collaterally edited.
 
 ## License
 

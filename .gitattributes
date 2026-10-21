@@ -1,0 +1,18 @@
+# 🔴 固定换行符：让不同平台的协作者不会互相看到「整文件都被改了」的假 diff。
+#    Windows 的 core.autocrlf 默认会把 LF 转成 CRLF，于是每一行都显示为改动。
+* text=auto eol=lf
+
+*.py text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.cff text eol=lf
+*.txt text eol=lf
+
+# 二进制：一律不做换行转换
+*.png binary
+*.jpg binary
+*.pdf binary
+*.gz binary
+*.csv binary

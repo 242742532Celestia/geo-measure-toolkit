@@ -119,12 +119,28 @@ def _load_counter():
     return mod.count_checks
 
 
+def _canonical_bytes(path: Path) -> bytes:
+    """取文件的**规范形式**：CRLF 一律归一为 LF。
+
+    🔴 为什么必须归一化：
+       仓库用 .gitattributes 固定 `eol=lf`，**git 里存的永远是 LF**；
+       但 Windows 上 core.autocrlf=true 会把工作树检出成 **CRLF**。
+       ⇒ 同一个文件在「本地 CRLF 工作树」和「CI 的 LF 检出」里字节不同。
+       如果 MANIFEST 记的是本地工作树的哈希，那么
+       **CI 的 release-hygiene 任务在任何新鲜检出上都必然红**
+       （实测 2026-10-22：干净克隆里 16 处 sha256 不符，而本地工作树全绿）。
+       ⇒ 统一按 LF 归一化后计算，两边结果一致，MANIFEST 才是**平台无关**的。
+    """
+    return path.read_bytes().replace(b"\r\n", b"\n")
+
+
 def _sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(1 << 16), b""):
-            h.update(chunk)
-    return h.hexdigest()
+    return hashlib.sha256(_canonical_bytes(path)).hexdigest()
+
+
+def _size(path: Path) -> int:
+    """规范形式下的字节数（同样与平台无关）。"""
+    return len(_canonical_bytes(path))
 
 
 def _measure(cmd, count_checks, timeout: int = 600) -> dict:
@@ -164,7 +180,7 @@ def build() -> dict:
             "path": rel,
             "role": t["role"],
             "sha256": _sha256(src),
-            "bytes": src.stat().st_size,
+            "bytes": _size(src),
         }
         if scope == "none":
             # 工具**没有**自检入口 —— 这是验证缺口，必须写清楚，不能装作没事。

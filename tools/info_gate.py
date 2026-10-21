@@ -727,10 +727,15 @@ def selftest() -> int:
        "F2_NEW_ENTITY" in check(aztec_src, aztec_src + " Ask Dr. Lopez about it.")["codes"])
 
     # ---- 退化改写（内容被抹掉只剩标题）必须被拦
+    # 🔴 这段文字必须先提成变量：Python 3.9/3.10/3.11 的 f-string **表达式部分不允许
+    #    出现反斜杠**（PEP 701 放开这件事是 3.12+）。直接写进 f-string 会让整个文件
+    #    在 ≤3.11 上变成 SyntaxError，连 import 都不行 —— 实测 2026-10-22 的 CI 就是
+    #    这么红的（py3.9/py3.11 失败、py3.13/py3.14 通过）。
+    _credits_only = "## Release Information\n\n## Credits\n"
     ck("退化改写（只剩标题无内容）被拦",
        check(heading_src, "## Release Information\n\n## Official Resources\n\n"
                           "## Production Credits\n")["blocked"],
-       f"codes={check(heading_src, '## Release Information\\n\\n## Credits\\n')['codes']}")
+       f"codes={check(heading_src, _credits_only)['codes']}")
 
     # ---- G1-G9 静默通过的证据可重跑（不是只能引用的结论）
     # 🔴 这几条是**唯一仍然需要包外模块**的检查，而且是**应该**需要的：

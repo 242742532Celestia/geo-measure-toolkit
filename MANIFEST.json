@@ -1,0 +1,442 @@
+{
+  "package": {
+    "name": "geo-measure-toolkit",
+    "version": "1.0.0",
+    "built_at": "2026-10-21T22:09:57+08:00",
+    "description": "Measurement and judgment toolkit for Generative Engine Optimization (GEO) experiments: power/MDE inversion, statistical lint rules, tautology audit, prompt freezing, feature extraction and the information-preservation gate."
+  },
+  "tools": [
+    {
+      "path": "tools/statpower.py",
+      "role": "Power/MDE inversion kernel: mde_* / n_required_* / deff / wilson_ci / permutation_p",
+      "sha256": "9c7e8361efb91f91ce7c169bd654d19f264f0fdbe2ad3c64ee8d726214ec8d9b",
+      "bytes": 25161,
+      "selftest": {
+        "args": [
+          "selftest"
+        ],
+        "scope": "standalone",
+        "expected": 33,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 33,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] NOISE_SIGMA_PP = 100 * NOISE_SIGMA: 6.77\n  [PASS] NOISE_SIGMA 在 (0,1): 0.0677\nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "tools/geo_stat_lint.py",
+      "role": "Six statistical lint rules L1-L6 (no-interval / below-noise / rare-binary-r / cluster-as-independent / uninterpretable-null / under-identified)",
+      "sha256": "08756d884299579e2b97d7840a1eae209912e5ae1011112feb5c7348ed97f4bc",
+      "bytes": 23880,
+      "selftest": {
+        "args": [
+          "selftest"
+        ],
+        "scope": "standalone",
+        "expected": 26,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 26,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] explain L6\n  [PASS] explain 未知规则返回 2\nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "tools/tautology_audit.py",
+      "role": "Tautology audit: leakage score L(T,Y) with four severity bands",
+      "sha256": "102f9d97b6d653177e7127b1ca69ca7301ba4695a8bdfc95893f165eafc69f14",
+      "bytes": 20228,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 30,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 30,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] survey 渲染含诚实降调  \n  [PASS] survey 渲染含五判据归属  \nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "tools/freeze_prompts.py",
+      "role": "Prompt freezing + --verify: snapshot + sha256, the basis for rebuilding paired runs",
+      "sha256": "af9009abcc4eaa10eb3482e26fb2b805ea47b8a09e3af7d2420375f18864a34a",
+      "bytes": 46112,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 83,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 83,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 🔴 stage_b 五臂的 prompt 文本逐字未变（E4 是新增而非改写）\n  [PASS] 🔴 E4 臂不出现在 stage_b 集里\n83 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "tools/geo_page_features.py",
+      "role": "Page-level candidate feature extractor (no scores, no weights, no grades)",
+      "sha256": "c98144f16db219ae470ba10fdf4ca897faac674ec4afac8cdde6584c9955ce96",
+      "bytes": 51559,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 61,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 61,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 落盘结果含 features\n  [PASS] 落盘结果无分数键\n61 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "tools/info_gate.py",
+      "role": "Information-preservation gate G1-G9 for free-text rewrites",
+      "sha256": "a65f48a609dc2e14fb3306450ad67de5057c631b66040a608e17f6869734782b",
+      "bytes": 43917,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 49,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 49,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": true,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 本模块不 import 任何网络/LLM 客户端\n  [PASS] 本模块不从环境变量读凭据（路径类变量允许）\n49 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "tools/info_gate_selfcontained_check.py",
+      "role": "Self-consistency proof: hides the optional external reference module, then re-runs the key paths",
+      "sha256": "9e66bc7a0e1a535c3e8c3d453eeefd00f1f40afbadd4c705e2d3dfa3f3190892",
+      "bytes": 6214,
+      "selftest": {
+        "args": [],
+        "scope": "standalone",
+        "expected": 2,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 2,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 自检（全部断言）               exit=0  49 PASS   0 FAIL\n  [PASS] G1-G9 自由文本证据           exit=0  ok ['finding', 'cases']\n■ 包外模块缺失时全链路仍然通过 -> 本复现包**自洽**"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/08_reproduce_geo_bench.py",
+      "role": "Reproduces the official GEO-bench harness (rate limiter, retry, verification)",
+      "sha256": "6e0d52a153f92aee1ad285a4d3705b185b05fc570a74b17622706986f07788c6",
+      "bytes": 106328,
+      "selftest": null,
+      "tier": "-",
+      "verification": "⚠ No self-test entry -- verification gap; confirm by hand before relying on it"
+    },
+    {
+      "path": "examples/10_citation_noise.py",
+      "role": "Re-measures run-to-run noise on the citation-rate outcome",
+      "sha256": "4245ef721fa1bc1bbc0bb4d2d157d11ee403bad18f467a07f949d294639ef743",
+      "bytes": 32715,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 10,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 10,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] Wilson 134/150 下界\n  [PASS] paired advantage rho=0.5 -> 1.0\nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/11_construct_validity.py",
+      "role": "Construct validity: is the measurement measuring what we claim?",
+      "sha256": "0164f7fdf5ca6ae48fd146ffc9d481f784fd2930d8f05c049d34d4d07c925535",
+      "bytes": 19662,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 22,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 22,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 全同分数据 -> 收敛效度给不出 r（不是伪 PASS）\n  [PASS] r_from_p 可用\nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/12_probe_site_facts.py",
+      "role": "Probes site-level facts for a list of domains",
+      "sha256": "c798499b2db8d357f7e8dc349c3bfdad02e18a86b83e3aae47f591040037176e",
+      "bytes": 19542,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 27,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 27,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 记录了第一跳状态码\n  [PASS] 跳转判定同时要求 Location 指向 https\nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/13_infrastructure_survey.py",
+      "role": "Splits literature into infrastructure layer vs method layer",
+      "sha256": "5f53824e983124ce0b3e904745de855120debfb5ba2c02b623f65881ef7c92b9",
+      "bytes": 20145,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 17,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 17,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 渲染含可观测性矩阵\n  [PASS] 渲染含三态警告\nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/14_stage_a_variance.py",
+      "role": "Variance decomposition sigma_b / sigma_e with a synthetic-data recovery self-test",
+      "sha256": "fbc3156bba509a16862ad8fb74b6b67bca9a473a54335e7763fba7791de001e7",
+      "bytes": 51311,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 67,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 67,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": true,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 预算按 ARMS_TOTAL 臂算，不是按数据里的 1 臂  \n  [PASS] 预算调用数 = n × repeats × 臂数  \nall checks passed"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/17_extend_geobench_cache.py",
+      "role": "Extends the official GEO-bench query cache without changing the filter rule",
+      "sha256": "afdc0d939720bb2d0c8d3e613ac664c2c170ec28d596cd231e7748e5aec3e5e3",
+      "bytes": 8478,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 8,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 8,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 扩池脚本声明了预注册修订\n  [PASS] 目标默认 1000（远超 150，足以满足 Q>=150）\n8 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/19_paired_analysis.py",
+      "role": "Paired analysis main program (Holm correction, paired_t degenerate semantics)",
+      "sha256": "80da6eeb81c13f7dcade53cbc47b1cb9a222c14a78cd7c156187435bd4a0631f",
+      "bytes": 62651,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 81,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 81,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": true,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 🔴 只有 original 时回落到默认臂表\n  [PASS] 🔴 infer_arms 忽略空臂名\n81 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/20_rewriter_noise.py",
+      "role": "Measures the noise a rewriting system introduces",
+      "sha256": "0b7ff747c6d423db64123b720cf83924a98ef1f5a0eb892eba56e95c6831b260",
+      "bytes": 15308,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 24,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 24,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 🔴 集合相同时不写那句提醒\n  [PASS] render 产出非空表\n24 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/23_e4_sequential.py",
+      "role": "Sequential stopping rules S1/S2/S3 over a balanced prefix",
+      "sha256": "d66b2bf3cd59d79d36e2d7cde8f6cd6d55f3f42066345be0a5144777ef8eb512",
+      "bytes": 17982,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 16,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 16,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 🔴 三个停止条件的阈值是模块级常量（改它们必须递增预注册版本号）\n  [PASS] 🔴 判读器不做数据驱动的决策：只输出判定，退出码承载停止信号\n16 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    },
+    {
+      "path": "examples/24_e4_noise_floor.py",
+      "role": "Variance decomposition + arithmetic lower bound on MDE",
+      "sha256": "d79af4d1c71a3b8267dcf70014376010fb00edf5f635088c318b3d6ce79e11b7",
+      "bytes": 12596,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 13,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 13,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 端到端：反解出的「达标所需 Q」大于当前 Q（既然不可达就必须更大）\n  [PASS] 渲染里出现「算术上不可达」的字样\n13 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
+    }
+  ]
+}

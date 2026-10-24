@@ -11,12 +11,16 @@ Everything here is **pure standard library**. No numpy, no scipy, no matplotlib,
 no network access required for the core self-test.
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/242742532Celestia/geo-measure-toolkit.git
 cd geo-measure-toolkit
 python run_selftests.py      # -> 17 PASS  0 FAIL
 ```
 
 That is the whole install. The tools are scripts, not a library.
+
+> ⭐ If this toolkit caught a real error in your analysis, starring it is how the next
+> person finds it. PRs welcome — [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)
+> says what a good one looks like here (and what a PR must keep green).
 
 ---
 
@@ -92,32 +96,49 @@ examples/
   24_e4_noise_floor.py        # variance decomposition + arithmetic lower bound on MDE
 scripts/
   check_deps.py               # dependency-closure audit (see below)
+docs/
+  social-preview.png          # 1280x640 card used when the repo link is shared
+.github/
+  CONTRIBUTING.md             # what a good PR looks like here
+  SECURITY.md                 # how to report a vulnerability
+  ISSUE_TEMPLATE/             # issue forms that ask for the finish line, not a wall of output
 ```
 
-### Why there are 18 tool files but 15 tools
+### How many tools there are, and how much of each one can be checked here
 
-`MANIFEST.json` marks **15** as independently runnable. Three more are shipped because
-other tools **dynamically load** them:
+Every `.py` under `tools/` and `examples/` is a **registered tool** — `MANIFEST.json`
+holds all **18**, each with its sha256 and its measured self-test count. What differs
+is not whether a file is a tool, but **how much of it can be checked in this repo**.
+That is recorded as a `scope` in `tools/build_manifest.py`:
 
-```
-examples/23_e4_sequential.py  ->  examples/19_paired_analysis.py  ->  examples/08_reproduce_geo_bench.py
-examples/24_e4_noise_floor.py ->  examples/23_e4_sequential.py
-tools/freeze_prompts.py       ->  examples/08_reproduce_geo_bench.py
-examples/17_extend_geobench_cache.py -> examples/08_reproduce_geo_bench.py
-examples/14_stage_a_variance.py -> examples/08_reproduce_geo_bench.py
-```
+| `scope` | Means | Tier | Here |
+|---|---|---|---|
+| `standalone` | the self-test runs in this repo — no project data, no network, no out-of-package module | `A` | **17** |
+| `needs-project` | the self-test needs this project's `outputs/` — it **cannot** run here, so it is skipped **loudly** (neither PASS nor FAIL) | `B` | **0** |
+| `none` | the tool has no self-test entry at all — a **verification gap**, flagged as such in `MANIFEST.json` | `-` | **1** (`examples/08_reproduce_geo_bench.py`) |
 
-These are loaded with `importlib.util.spec_from_file_location`, so **no static import
-statement mentions them**. A dependency scan that only reads `import` lines misses
-them entirely — which is exactly how they went missing once already.
+`python run_selftests.py --list` prints the registry as it stands; the numbers above
+are what it prints today, not hand-copied.
 
-`scripts/check_deps.py` closes that hole by scanning every `.py` **string literal**
-that looks like a path, not just the import statements:
+### The dynamic dependencies are invisible to a static scan
+
+Several tools are loaded by others with
+`importlib.util.spec_from_file_location`, so **no static `import` statement mentions
+them** — a dependency scan that only reads import lines misses them entirely, which is
+exactly how they went missing once already.
+
+So the graph is **not written down here** — it is printed by the audit that resolves it:
 
 ```bash
 python scripts/check_deps.py
-# -> ✅ dependency closure complete
+# -> ✅ 依赖闭包完整：所有动态/静态依赖都能在仓库内解析
 ```
+
+> An earlier version of this README listed those edges by hand. They were wrong, and
+> nothing noticed: a hand-copied list has no checker. The command **is** the list.
+
+`scripts/check_deps.py` closes that hole by scanning every `.py` **string literal**
+that looks like a path, not just the import statements.
 
 ---
 

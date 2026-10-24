@@ -1,0 +1,7 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question, or a rule you want to discuss
+    url: https://github.com/242742532Celestia/geo-measure-toolkit/discussions
+    about: >-
+      "How do I use this tool" and "is this rule right" are questions, not defects.
+      Use Discussions for them so a bug report always means a bug.

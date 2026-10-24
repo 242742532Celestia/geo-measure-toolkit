@@ -36,6 +36,14 @@ displayNames:
 ⇒ **只引用，不复制。** 下面每个工具都给仓库路径；需要跑就 clone 仓库，
 或指向已安装的那一份。
 
+```bash
+git clone https://github.com/242742532Celestia/geo-measure-toolkit.git
+```
+
+仓库地址：<https://github.com/242742532Celestia/geo-measure-toolkit>
+（换账号用 `python scripts/set_repo_url.py --owner <账号>` —— 本文件、`CITATION.cff`、
+README badge 三处一起改，脚本已经覆盖 SKILL.md。）
+
 ---
 
 ## 工具清单

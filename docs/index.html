@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>geo-measure-toolkit — measurement and judgment tooling for GEO experiments</title>
+<meta name="description" content="Power/MDE inversion, six statistical lint rules, a leakage audit, prompt freezing, feature extraction and an information-preservation gate. Pure standard library. No data shipped.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="geo-measure-toolkit">
+<meta property="og:description" content="A result the design could never have produced should be detectable, not merely unlikely.">
+<meta property="og:image" content="https://242742532celestia.github.io/geo-measure-toolkit/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://242742532celestia.github.io/geo-measure-toolkit/social-preview.png">
+<style>
+  :root{
+    --bg:#0a0f1a; --bg2:#151d2d; --grid:#1e283a; --border:#263248;
+    --txt:#e6edf3; --muted:#93a1b5; --cyan:#4cc9f0; --amber:#f4a261; --green:#7be495;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--txt);
+    font:16px/1.65 "Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+    background-image:
+      linear-gradient(to bottom, rgba(21,29,45,.9), rgba(10,15,26,.95)),
+      repeating-linear-gradient(to right, var(--grid) 0 1px, transparent 1px 40px),
+      repeating-linear-gradient(to bottom, var(--grid) 0 1px, transparent 1px 40px);
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:64px 24px 72px}
+  .eyebrow{font:600 13px/1 "Cascadia Mono",Consolas,monospace;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase}
+  h1{font-size:clamp(38px,7vw,60px);line-height:1.08;margin:.28em 0 .1em;font-weight:700;letter-spacing:-.02em}
+  .rule{width:116px;height:4px;background:var(--cyan);margin:18px 0 26px;border-radius:2px}
+  .lede{font-size:20px;color:var(--muted);max-width:760px;margin:0 0 8px}
+  .lede strong{color:var(--txt);font-weight:600}
+  pre{background:#0d1420;border:1px solid var(--border);border-radius:12px;padding:18px 20px;overflow:auto;
+      font:14px/1.6 "Cascadia Mono",Consolas,monospace;color:var(--txt)}
+  pre .c{color:#6b7a90} pre .p{color:var(--cyan)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0;padding:0;list-style:none}
+  .chips li{font:600 13px/1 "Cascadia Mono",Consolas,monospace;padding:9px 14px;border-radius:9px;border:1px solid}
+  .c1{color:var(--cyan);border-color:var(--cyan)} .c2{color:var(--green);border-color:var(--green)}
+  .c3{color:var(--amber);border-color:var(--amber)} .c4{color:var(--muted);border-color:var(--muted)}
+  figure{margin:44px 0 0;background:#0d1420;border:1px solid var(--border);border-radius:14px;padding:26px 24px 20px}
+  figcaption{font-size:14px;color:var(--muted);margin-top:16px}
+  h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:52px 0 18px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+  .card{background:#0d1420;border:1px solid var(--border);border-radius:12px;padding:18px 18px 16px}
+  .card h3{margin:0 0 6px;font-size:16px}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .card code{font:13px/1.5 "Cascadia Mono",Consolas,monospace;color:var(--cyan)}
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+  .links a{display:inline-block;border:1px solid var(--border);border-radius:10px;padding:11px 16px;
+           color:var(--txt);text-decoration:none;font-size:15px;background:#0d1420}
+  .links a:hover{border-color:var(--cyan);color:var(--cyan)}
+  .links a.primary{border-color:var(--cyan);color:var(--cyan)}
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--border);color:var(--muted);font-size:14px}
+  footer a{color:var(--cyan)}
+  .note{color:var(--muted);font-size:15px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">GEO measurement toolkit</div>
+  <h1>geo-measure-toolkit</h1>
+  <div class="rule"></div>
+  <p class="lede">
+    <strong>Measurement and judgment tooling for GEO experiments.</strong>
+    Power / MDE inversion, six statistical lint rules, a leakage audit, prompt freezing,
+    feature extraction, and an information-preservation gate.
+    Pure standard library — no numpy, no scipy, no matplotlib, and no dataset shipped.
+  </p>
+
+<pre><span class="c"># that is the whole install</span>
+git clone https://github.com/242742532Celestia/geo-measure-toolkit.git
+cd geo-measure-toolkit
+python run_selftests.py      <span class="c"># -&gt; 17 PASS  0 FAIL</span></pre>
+
+  <ul class="chips">
+    <li class="c1">18 tools</li>
+    <li class="c2">569 assertions</li>
+    <li class="c3">pure stdlib</li>
+    <li class="c4">MIT</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 420 250" width="100%" height="250" role="img"
+         aria-label="A reported effect above the noise floor, with the minimum detectable effect marked">
+      <line x1="40" y1="210" x2="400" y2="210" stroke="#46566e" stroke-width="2"/>
+      <rect x="40" y="140" width="360" height="70" fill="#3a281c"/>
+      <line x1="40" y1="140" x2="400" y2="140" stroke="#f4a261" stroke-width="3"/>
+      <text x="40" y="126" fill="#f4a261" font-family="Consolas,monospace" font-size="15">MDE</text>
+      <text x="40" y="232" fill="#c49264" font-family="Segoe UI,sans-serif" font-size="15" font-style="italic">noise floor  ±σ</text>
+      <line x1="290" y1="44" x2="290" y2="210" stroke="#4cc9f0" stroke-width="4"/>
+      <circle cx="290" cy="40" r="9" fill="#4cc9f0"/>
+      <text x="200" y="26" fill="#4cc9f0" font-family="Consolas,monospace" font-size="14">REPORTED EFFECT</text>
+    </svg>
+    <figcaption>
+      A result the design could never have produced should be <strong>detectable</strong>,
+      not merely unlikely. The tools exist to make that failure mode checkable.
+    </figcaption>
+  </figure>
+
+  <h2>What is in the box</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Reportable at all?</h3>
+      <p><code>tools/statpower.py</code> — inverts power / MDE. Given the number a paper
+         reported, computes the smallest effect that design could actually have detected.</p>
+    </div>
+    <div class="card">
+      <h3>Does that null stand up?</h3>
+      <p><code>tools/geo_stat_lint.py</code> — six lint rules (L1–L6) over a filled-in
+         result card: no interval, below noise, rare binary, cluster as independent,
+         uninterpretable null, under-identified.</p>
+    </div>
+    <div class="card">
+      <h3>Did the treatment write the answer in?</h3>
+      <p><code>tools/tautology_audit.py</code> — leakage score L(T,Y) with four severity
+         bands, plus the decomposition of the treatment arm's own components.</p>
+    </div>
+    <div class="card">
+      <h3>Can I rebuild the same arms?</h3>
+      <p><code>tools/freeze_prompts.py</code> — snapshot plus sha256 of every prompt,
+         with <code>--verify</code> for later.</p>
+    </div>
+    <div class="card">
+      <h3>Is that extractor secretly a score?</h3>
+      <p><code>tools/geo_page_features.py</code> — candidate features only. Its self-test
+         scans the output keys to guarantee no score, weight or grade ever appears.</p>
+    </div>
+    <div class="card">
+      <h3>Did the rewrite fabricate facts?</h3>
+      <p><code>tools/info_gate.py</code> — information-preservation gate G1–G9 over free
+         text, with an optional cross-check against an upstream reference module.</p>
+    </div>
+  </div>
+
+  <h2>Where to go next</h2>
+  <div class="links">
+    <a class="primary" href="https://github.com/242742532Celestia/geo-measure-toolkit#readme">Read the full documentation</a>
+    <a href="https://github.com/242742532Celestia/geo-measure-toolkit/releases/tag/v1.0.0">Release v1.0.0</a>
+    <a href="https://github.com/242742532Celestia/geo-measure-toolkit/issues">Report an issue</a>
+    <a href="https://github.com/242742532Celestia/geo-measure-toolkit/discussions">Discussions</a>
+    <a href="https://github.com/242742532Celestia/geo-measure-toolkit/blob/main/CITATION.cff">Cite it</a>
+  </div>
+  <p class="note">
+    This page is a cover. Everything detailed — the four judgment states, the data you
+    have to supply, how the registry stays honest — lives in the
+    <a href="https://github.com/242742532Celestia/geo-measure-toolkit#readme">README</a>.
+  </p>
+
+  <footer>
+    MIT licensed. Pure Python standard library, Python 3.9+.
+    The repository ships <strong>no datasets</strong>: every example reads data you supply
+    or a public source it names.
+    <br>Source: <a href="https://github.com/242742532Celestia/geo-measure-toolkit">github.com/242742532Celestia/geo-measure-toolkit</a>
+  </footer>
+
+</div>
+</body>
+</html>

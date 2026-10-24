@@ -97,12 +97,17 @@ examples/
 scripts/
   check_deps.py               # dependency-closure audit (see below)
 docs/
-  social-preview.png          # 1280x640 card used when the repo link is shared
+  index.html                 # landing page source (GitHub Pages serves main:/docs)
+  social-preview.png         # 1280x640 card used when the repo link is shared
 .github/
   CONTRIBUTING.md             # what a good PR looks like here
   SECURITY.md                 # how to report a vulnerability
   ISSUE_TEMPLATE/             # issue forms that ask for the finish line, not a wall of output
 ```
+
+The landing page at **`docs/index.html`** is what GitHub Pages serves from this
+branch, and it is the repository's `homepage` field — so it is edited here, in a pull
+request, like any other file.
 
 ### How many tools there are, and how much of each one can be checked here
 

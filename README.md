@@ -183,6 +183,34 @@ One tool has **no self-test entry at all**: `examples/08_reproduce_geo_bench.py`
 It is a verification gap and is flagged as such in `MANIFEST.json` — confirm it by
 hand before relying on it.
 
+### Datasets the examples need
+
+This repository ships **no data**. The only data-shaped file it contains is
+`MANIFEST.json` — the registry of tools and their measured self-test counts. Every
+dataset the examples analyse comes from one of three places, and **the default one
+degrades to a demo unless you supply it**:
+
+| Path | Where the data comes from | Network | Licence |
+|---|---|---|---|
+| `--dataset geobench` | `examples/08_reproduce_geo_bench.py` streams `GEO-Optim/geo-bench` `test.jsonl` from `hf-mirror.com`, falling back to `huggingface.co`, and caches it under `data/geo-bench/` | yes | CC-BY-SA-4.0 |
+| `--dataset geoagent` (**default**) | a sibling `geo-agent` checkout providing `data/queries.csv` + `data/skus.csv` — auto-detected at `geo-agent/` or `../geo-agent`, or given via `--data-root` / `GEO_AGENT_ROOT` | no | not redistributable here |
+| `--synthetic` | the same `geo-agent` checkout, `data/skus_synthetic.csv` | no | not redistributable here |
+
+**If the `geo-agent` checkout cannot be found, the default path does not fail — it
+falls back to a built-in demo of 3 queries × 2 SKUs**, printing
+`[!] 找不到 geo-agent 仓库，改用内置 demo 数据`. That run reports its data source
+as `builtin-demo`. A demo is not an experiment: check which line the tool printed
+(`[+] 数据源: <path>` vs the `[!]` warning) before quoting any number from it.
+
+Two further examples analyse **your own experiment output**, not a public dataset:
+
+* `examples/20_rewriter_noise.py` compares two rewrite runs you made — two
+  `fill_checkpoint.jsonl` files (defaults `outputs/15_stage_b/` and
+  `outputs/15_stage_b_qwen/`). Point it at yours with `--a` / `--b`; when a file is
+  missing it exits with an error rather than falling back.
+* `examples/23_e4_sequential.py` writes and re-reads its own `seq_log.jsonl` under
+  `--out-dir`. It has no built-in sample to copy.
+
 ---
 
 ## Keeping the registry honest
@@ -206,8 +234,10 @@ silently lost checks.
 
 * Python 3.9+ (developed and tested on 3.14; CI runs 3.9 / 3.11 / 3.13 / 3.14)
 * No third-party packages for the core tools
-* Network access only for `examples/12_probe_site_facts.py` (site probing) and
-  `examples/17_extend_geobench_cache.py` (downloading the official benchmark cache)
+* Network access only for `examples/12_probe_site_facts.py` (site probing),
+  `examples/17_extend_geobench_cache.py` (downloading the official benchmark cache),
+  and `examples/08_reproduce_geo_bench.py --dataset geobench` (streaming the official
+  GEO-bench dataset)
 
 ## Citing
 

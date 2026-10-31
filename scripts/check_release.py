@@ -12,7 +12,8 @@
 3. `CITATION.cff` 的 `version` 与 `MANIFEST.json` 的版本**一致**；
 4. `CITATION.cff` 声明的 license 与仓库里的 `LICENSE` 文件**对得上**；
 5. README 的 CI badge 地址与 `CITATION.cff` 的 `repository-code` **同一个仓**；
-6. `LICENSE` 里的版权行不是占位符。
+6. `LICENSE` 里的版权行不是占位符；
+7. `README.md` 与 `SKILL.md` 里**本仓自己**的每一处地址都指向同一个仓，且无占位符。
 
 用法：
     python scripts/check_release.py
@@ -35,6 +36,9 @@ except Exception:
 ROOT = Path(__file__).resolve().parent.parent
 OWNER_TOK = "__REPO_OWNER__"
 NAME_TOK = "__REPO_NAME__"
+#: 本仓的仓库名 —— 只有引用**这个**名字的地址才需要与 repository-code 一致；
+#: 别人的仓（官方 GEO-bench 等）合法，不查。
+REPO_NAME = "geo-measure-toolkit"
 
 CFF_REQUIRED = ("cff-version", "message", "title", "authors", "version",
                 "date-released", "license", "repository-code")
@@ -42,6 +46,15 @@ CFF_REQUIRED = ("cff-version", "message", "title", "authors", "version",
 #: 金丝雀：本仓引用**别人**的仓库地址。它一被改坏，08 号脚本就会去错误的地址
 #: 拉官方基准 —— 静默的、后果严重的错。所以发布前必须确认它原封不动。
 CANARY = ("examples/08_reproduce_geo_bench.py", "github.com/GEO-optim/GEO")
+
+
+def _repo_refs(text: str) -> set[tuple[str, str]]:
+    """取出文本里所有 github.com/<owner>/<repo> 形式的仓库引用（去掉 .git 后缀）。"""
+    out: set[tuple[str, str]] = set()
+    pat = r"github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+)"
+    for owner, name in re.findall(pat, text):
+        out.add((owner, name[:-4] if name.endswith(".git") else name))
+    return out
 
 
 def _cff_get(text: str, key: str) -> str | None:
@@ -64,6 +77,9 @@ def _cff_has(text: str, key: str) -> bool:
 
 def main(argv=None) -> int:
     problems: list[str] = []
+    # 🔴 成功输出必须能回答"检查了几个" —— 0 个引用也算"通过"是最危险的假绿。
+    refs_checked = 0
+    files_scanned = 0
 
     cff_path = ROOT / "CITATION.cff"
     if not cff_path.exists():
@@ -119,6 +135,42 @@ def main(argv=None) -> int:
                         f"README 的 badge 指向 {owner}/{name}，"
                         f"而 CITATION.cff 指向 {cparts} —— 不是同一个仓")
 
+    # 本仓地址一致性（README 与 SKILL.md）
+    #
+    # 🔴 为什么要连 `SKILL.md` 一起查：`set_repo_url.py` 写**三处**
+    #    （CITATION.cff / README / SKILL.md），而上面那块只验了前两处。
+    #    ⇒ SKILL.md 指向一个不存在的仓时，**没有任何检查会报错**，
+    #      只是别人 clone 不到 —— 这正是"静默地对不上"那一类问题。
+    # 🔴 只查**仓库名等于本仓名**的引用：README 里指向官方 GEO-bench 的链接
+    #    是合法的，不该被误报（假警报比漏报更坏）。
+    # 🔴 上面那块 badge 检查**必须保留**：badge 指向的仓名可能整个换掉，
+    #    那时它就不再是"本仓的引用"，下面的通用检查会跳过它 ⇒ 会漏报。
+    cparts_all = ""
+    if repo_code:
+        cparts_all = re.sub(r"^https?://github\.com/", "", repo_code).strip("/")
+    for rel in ("README.md", "SKILL.md"):
+        fp = ROOT / rel
+        if not fp.exists():
+            continue
+        t = fp.read_text(encoding="utf-8")
+        files_scanned += 1
+        if OWNER_TOK in t or NAME_TOK in t:
+            problems.append(
+                f"{rel} 里还有仓库地址占位符（{OWNER_TOK} / {NAME_TOK}）")
+        if not cparts_all:
+            continue
+        for owner, name in sorted(_repo_refs(t)):
+            if name != REPO_NAME:
+                continue  # 别人的仓（官方基准等），合法
+            refs_checked += 1
+            if f"{owner}/{name}" != cparts_all:
+                problems.append(
+                    f"{rel} 里的本仓地址指向 {owner}/{name}，"
+                    f"而 CITATION.cff 指向 {cparts_all} —— 不是同一个仓")
+        if f"github.com/{cparts_all}" not in t:
+            problems.append(
+                f"{rel} 里找不到本仓地址 github.com/{cparts_all} —— 可能被整个改成了别的仓")
+
     # 金丝雀：别人仓库的链接必须原封不动
     rel, needle = CANARY
     cp = ROOT / rel
@@ -135,7 +187,8 @@ def main(argv=None) -> int:
             print(f"   [FAIL] {p}")
         return 1
     print("✅ 发布卫生检查通过：CITATION / license / 版本 / badge 地址一致；"
-          "官方基准链接金丝雀完好")
+          "官方基准链接金丝雀完好"
+          f"（读了 {files_scanned} 个文件，核了 {refs_checked} 处本仓地址）")
     return 0
 
 

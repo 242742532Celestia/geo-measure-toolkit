@@ -13,7 +13,7 @@ no network access required for the core self-test.
 ```bash
 git clone https://github.com/242742532Celestia/geo-measure-toolkit.git
 cd geo-measure-toolkit
-python run_selftests.py      # -> 17 PASS  0 FAIL
+python run_selftests.py      # -> 18 PASS  0 FAIL
 ```
 
 That is the whole install. The tools are scripts, not a library.
@@ -84,6 +84,7 @@ tools/
   build_manifest.py           # regenerates MANIFEST.json by measurement
 examples/
   08_reproduce_geo_bench.py   # reproduce the official GEO-bench harness
+  09_measure_noise.py         # noise floor of your own harness across runs
   10_citation_noise.py        # run-to-run noise on the citation-rate outcome
   11_construct_validity.py    # construct validity
   12_probe_site_facts.py      # probe site-level facts
@@ -112,13 +113,13 @@ request, like any other file.
 ### How many tools there are, and how much of each one can be checked here
 
 Every `.py` under `tools/` and `examples/` is a **registered tool** — `MANIFEST.json`
-holds all **18**, each with its sha256 and its measured self-test count. What differs
+holds all **19**, each with its sha256 and its measured self-test count. What differs
 is not whether a file is a tool, but **how much of it can be checked in this repo**.
 That is recorded as a `scope` in `tools/build_manifest.py`:
 
 | `scope` | Means | Tier | Here |
 |---|---|---|---|
-| `standalone` | the self-test runs in this repo — no project data, no network, no out-of-package module | `A` | **17** |
+| `standalone` | the self-test runs in this repo — no project data, no network, no out-of-package module | `A` | **18** |
 | `needs-project` | the self-test needs this project's `outputs/` — it **cannot** run here, so it is skipped **loudly** (neither PASS nor FAIL) | `B` | **0** |
 | `none` | the tool has no self-test entry at all — a **verification gap**, flagged as such in `MANIFEST.json` | `-` | **1** (`examples/08_reproduce_geo_bench.py`) |
 
@@ -228,8 +229,12 @@ falls back to a built-in demo of 3 queries × 2 SKUs**, printing
 as `builtin-demo`. A demo is not an experiment: check which line the tool printed
 (`[+] 数据源: <path>` vs the `[!]` warning) before quoting any number from it.
 
-Two further examples analyse **your own experiment output**, not a public dataset:
+Three further examples analyse **your own experiment output**, not a public dataset:
 
+* `examples/09_measure_noise.py` measures **your own harness's noise floor** — it needs
+  **at least two runs** of the same arms, because the run-to-run spread *is* the noise.
+  With a single run it marks the noise floor as **not estimable** and falls back to the
+  within-run SD for the power table — that is a different quantity, not a substitute.
 * `examples/20_rewriter_noise.py` compares two rewrite runs you made — two
   `fill_checkpoint.jsonl` files (defaults `outputs/15_stage_b/` and
   `outputs/15_stage_b_qwen/`). Point it at yours with `--a` / `--b`; when a file is

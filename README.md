@@ -280,20 +280,30 @@ If you use this toolkit in published work, please cite it — the metadata lives
 }
 ```
 
-### Before you publish this repo
+### Repo identity (and how to change it)
 
-The GitHub account is the one thing this repository cannot know. It is left as a
-single placeholder (`242742532Celestia`) in `CITATION.cff` and in the README badge, so
-it can be filled in exactly once, in exactly one place:
+The account is settled: this repository lives at
+[`242742532Celestia/geo-measure-toolkit`](https://github.com/242742532Celestia/geo-measure-toolkit).
+The address is filled in everywhere it can appear — `CITATION.cff` (`repository-code`),
+the CI badge at the top of this file, and the repository reference in `SKILL.md` —
+and `python scripts/check_release.py` passes on `main`.
+
+**Forking or moving this repository? Change the address with the script, not by
+hand.** The address appears in three files, and editing "the two obvious ones" leaves
+`SKILL.md` pointing at a repository that no longer exists — a broken link that no CI
+job reports.
 
 ```bash
 python scripts/set_repo_url.py --owner YourGitHubHandle
 python scripts/check_release.py     # must pass
 ```
 
-`check_release.py` verifies that the citation metadata, the licence, the registry
-version and the badge all point at the same repository — and that the link to the
-**official** GEO-bench repository has not been collaterally edited.
+`check_release.py` verifies that `CITATION.cff` carries all required fields, that its
+version matches `MANIFEST.json`, that its declared licence matches the `LICENSE` file,
+that the CI badge and `repository-code` point at the same repository, that every
+reference to **this** repository in `README.md` and `SKILL.md` points at that same
+repository, that no repository-address placeholder survives in those files, and that
+the link to the **official** GEO-bench repository has not been collaterally edited.
 
 ## License
 

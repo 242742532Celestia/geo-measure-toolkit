@@ -2,7 +2,7 @@
   "package": {
     "name": "geo-measure-toolkit",
     "version": "1.0.0",
-    "built_at": "2026-10-31T12:19:16+08:00",
+    "built_at": "2026-10-31T12:42:19+08:00",
     "description": "Measurement and judgment toolkit for Generative Engine Optimization (GEO) experiments: power/MDE inversion, statistical lint rules, tautology audit, prompt freezing, feature extraction and the information-preservation gate."
   },
   "tools": [
@@ -316,24 +316,24 @@
     {
       "path": "examples/14_stage_a_variance.py",
       "role": "Variance decomposition sigma_b / sigma_e with a synthetic-data recovery self-test",
-      "sha256": "27f24f6e373dc163e8a006638d3ad80f0651cd5cbf45ebe083df83caed77e60d",
-      "bytes": 50773,
+      "sha256": "24821acf40e86ce207b2517702e653bc599a03ce17aabd6d3609b1447a1c82c4",
+      "bytes": 54705,
       "selftest": {
         "args": [
           "--selftest"
         ],
         "scope": "standalone",
-        "expected": 67,
+        "expected": 73,
         "reason": "Runnable standalone inside this repository",
         "measured": {
-          "pass": 67,
+          "pass": 73,
           "fail": 0,
           "finished": true,
           "skipped": false,
-          "declared_skip": true,
+          "declared_skip": false,
           "rc": 0,
           "why": "",
-          "tail": "  [PASS] 预算按 ARMS_TOTAL 臂算，不是按数据里的 1 臂  \n  [PASS] 预算调用数 = n × repeats × 臂数  \nall checks passed"
+          "tail": "  [PASS] 渲染层对单轮数据也不吐栈回溯（安全网）  # 阶段 A 方差分解：**不可用**\n  [PASS] 安全网里给出了替代路径（09 / 19）  \nall checks passed"
         }
       },
       "tier": "A"

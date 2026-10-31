@@ -58,7 +58,7 @@ README badge 三处一起改，脚本已经覆盖 SKILL.md。）
 | 信息保持门 | `tools/info_gate.py` | 这次改写有没有编造信息？G1–G9 过了没有？ | 49–53 项 |
 | 构念效度 | `examples/11_construct_validity.py` | 测的是不是我要测的那个构念？ | 22 项 |
 | 配对分析 | `examples/19_paired_analysis.py` | 配对怎么做才对（Holm 校正、退化语义）？ | 81 项 |
-| 方差分解 | `examples/14_stage_a_variance.py` | σ_b / σ_e 怎么分、样本量怎么定型？ | 67 项 |
+| 方差分解 | `examples/14_stage_a_variance.py` | σ_b / σ_e 怎么分、样本量怎么定型？ | 73 项 |
 | 噪声底噪 | `examples/24_e4_noise_floor.py` | 方差分解与 MDE 的算术下界 | 13 项 |
 | 跨 run 噪声底噪 | `examples/09_measure_noise.py` | 我这套 harness 自己的噪声多大？某个臂的符号稳不稳？ | 14 项 |
 | 序贯停止 | `examples/23_e4_sequential.py` | 序贯停止条件（预注册的一部分） | 16 项 |

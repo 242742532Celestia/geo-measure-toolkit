@@ -83,6 +83,8 @@ TOOLS = [
     dict(path="examples/08_reproduce_geo_bench.py", args=[], scope="none",
          role="Reproduces the official GEO-bench harness (rate limiter, retry, verification)",
          note="No self-test entry -- verification gap, confirm by hand before relying on it"),
+    dict(path="examples/09_measure_noise.py", args=["--selftest"], scope="standalone",
+         role="Measures the harness's own noise floor: cross-run spread, sign stability, and the sample size a target effect needs"),
     dict(path="examples/10_citation_noise.py", args=["--selftest"], scope="standalone",
          role="Re-measures run-to-run noise on the citation-rate outcome"),
     dict(path="examples/11_construct_validity.py", args=["--selftest"], scope="standalone",

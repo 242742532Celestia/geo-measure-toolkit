@@ -60,6 +60,7 @@ README badge 三处一起改，脚本已经覆盖 SKILL.md。）
 | 配对分析 | `examples/19_paired_analysis.py` | 配对怎么做才对（Holm 校正、退化语义）？ | 81 项 |
 | 方差分解 | `examples/14_stage_a_variance.py` | σ_b / σ_e 怎么分、样本量怎么定型？ | 67 项 |
 | 噪声底噪 | `examples/24_e4_noise_floor.py` | 方差分解与 MDE 的算术下界 | 13 项 |
+| 跨 run 噪声底噪 | `examples/09_measure_noise.py` | 我这套 harness 自己的噪声多大？某个臂的符号稳不稳？ | 14 项 |
 | 序贯停止 | `examples/23_e4_sequential.py` | 序贯停止条件（预注册的一部分） | 16 项 |
 | 改写器噪声 | `examples/20_rewriter_noise.py` | 改写器引入了多少噪声？ | 24 项 |
 | 引文噪声 | `examples/10_citation_noise.py` | 引文率上的 run-to-run 噪声 | 10 项 |
@@ -149,6 +150,8 @@ python tools/freeze_prompts.py --verify
   它们带**合成数据退化路径**——真实产出不在场时用合成数据验代码路径，
   并**出声**说明用的是合成数据。合成数据证明的是代码路径，
   **不证明真实数值**；真实数字仍然只能由真实数据说话。
+* `09_measure_noise.py` 的**噪声底噪**需要**至少两个 run**；只给一个 run 时它把噪声底噪
+  标为「不可估」，改用组内 SD 给功效表 —— **那不是同一个量**，别混用。
 * `08_reproduce_geo_bench.py` **没有自检入口**（验证缺口）—— 依赖它之前先人工确认。
 * 候选特征抽取器**只出候选预测变量**，不是分数、不是权重、不是档位。
   要打分请用别的工具。

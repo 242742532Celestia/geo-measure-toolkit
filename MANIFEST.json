@@ -2,7 +2,7 @@
   "package": {
     "name": "geo-measure-toolkit",
     "version": "1.0.0",
-    "built_at": "2026-10-22T00:08:06+08:00",
+    "built_at": "2026-10-31T12:19:16+08:00",
     "description": "Measurement and judgment toolkit for Generative Engine Optimization (GEO) experiments: power/MDE inversion, statistical lint rules, tautology audit, prompt freezing, feature extraction and the information-preservation gate."
   },
   "tools": [
@@ -187,6 +187,31 @@
       "selftest": null,
       "tier": "-",
       "verification": "⚠ No self-test entry -- verification gap; confirm by hand before relying on it"
+    },
+    {
+      "path": "examples/09_measure_noise.py",
+      "role": "Measures the harness's own noise floor: cross-run spread, sign stability, and the sample size a target effect needs",
+      "sha256": "64eac830c64f1670a43e300b556af050b4ae863e8120dc6f6891d07210541d51",
+      "bytes": 29554,
+      "selftest": {
+        "args": [
+          "--selftest"
+        ],
+        "scope": "standalone",
+        "expected": 14,
+        "reason": "Runnable standalone inside this repository",
+        "measured": {
+          "pass": 14,
+          "fail": 0,
+          "finished": true,
+          "skipped": false,
+          "declared_skip": false,
+          "rc": 0,
+          "why": "",
+          "tail": "  [PASS] 渲染出非空 markdown\n  [PASS] 渲染报出 run 数\n14 PASS   0 FAIL"
+        }
+      },
+      "tier": "A"
     },
     {
       "path": "examples/10_citation_noise.py",

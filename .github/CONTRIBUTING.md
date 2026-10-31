@@ -16,7 +16,7 @@ it makes some failure mode *falsifiable* that was not falsifiable before.
 A pull request is not done until all four of these pass locally:
 
 ```bash
-python run_selftests.py                  # 17 PASS  0 FAIL
+python run_selftests.py                  # 18 PASS  0 FAIL
 python tools/build_manifest.py --check   # registry matches reality
 python scripts/check_deps.py             # dependency closure complete
 python scripts/check_release.py          # CITATION / license / badge consistency

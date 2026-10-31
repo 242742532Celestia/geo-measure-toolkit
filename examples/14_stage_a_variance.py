@@ -3,7 +3,7 @@
 """
 14_stage_a_variance.py -- 预注册阶段 A：0 臂方差分解与样本量定型
 
-对应方法规范的 §6。本文只做 §6 规定的计算，**不新增规则**。
+对应 `docs/method/method-chapter.md` §6。本文只做 §6 规定的计算，**不新增规则**。
 
 🔴 本脚本的纪律
 ---------------
@@ -15,7 +15,7 @@
 
 用法
 ----
-    python examples/14_stage_a_variance.py --csv path/to/raw_trials.csv
+    python examples/14_stage_a_variance.py --csv E:/GEO/outputs/08_geobench_A15/raw_trials.csv
     python examples/14_stage_a_variance.py --csv ... --out outputs/stage_a.json
     python examples/14_stage_a_variance.py --selftest
 """
@@ -31,13 +31,6 @@ import os
 import sys
 from collections import defaultdict
 from statistics import NormalDist
-# ── 控制台编码兜底 ────────────────────────────────────────────────
-# Windows 控制台默认 GBK 码页，打印 ✅/⚠/❌/🔴/⇒/² 这类字符会 UnicodeEncodeError 崩溃。
-# 这里把「无法编码」改成「替换显示」而不是抛异常；UTF-8 环境（Linux/macOS/CI）下是空操作。
-try:
-    sys.stdout.reconfigure(errors="replace")
-except Exception:
-    pass
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tools"))
 from statpower import mde_paired, mde_two_proportions, wilson_ci  # noqa: E402
@@ -45,7 +38,7 @@ from statpower import mde_paired, mde_two_proportions, wilson_ci  # noqa: E402
 _N = NormalDist()
 
 # ---------------------------------------------------------------------------
-# 预注册常量（§6 / §6.3，改动必须递增方法规范版本号）
+# 预注册常量（§6 / §6.3，改动必须递增 method-chapter 版本号）
 # ---------------------------------------------------------------------------
 TARGET_MDE_PP = 5.0        # §6.1 目标 MDE
 ALPHA = 0.05                # 双尾
@@ -380,6 +373,21 @@ def mde_at(n_q: int, repeats: int, sigma_d_pp: float | None) -> float | None:
 # 渲染
 # ---------------------------------------------------------------------------
 
+def _decomposition_error(rep: dict) -> str:
+    """返回「方差分解不可用」的原因；可用则返回空串。
+
+    🔴 **为什么单独抽成一个函数**：旧版没有它，于是「每个 query 只跑 1 轮」时
+    `variance_decomposition()` 返回 `{"error": "没有重复观测"}`（**没有** `overall_mean` 键），
+    渲染直接取 `c['overall_mean']` ⇒ 抛 `KeyError` ⇒ 买家看到的是一屏 Python 栈回溯，
+    而不是一句能照做的话。**测不出来要说清楚，不能用崩溃代替说明。**
+    """
+    for key in ("citation_probability", "geo_impression"):
+        err = (rep.get(key) or {}).get("error")
+        if err:
+            return str(err)
+    return ""
+
+
 def analyze(rows: list[dict]) -> dict:
     arms = sorted({r["arm"] for r in rows})
     if len(arms) != 1:
@@ -443,7 +451,7 @@ def analyze(rows: list[dict]) -> dict:
         "meta": {
             "source": "阶段 A 0 臂方差分解",
             "n_rows": len(rows), "n_queries": n_q, "n_repeats": n_rep,
-            "arms": arms, "preregistered": "方法规范 §6（v1.1）",
+            "arms": arms, "preregistered": "method-chapter.md §6 (v1.1)",
         },
         "citation_probability": cite,
         "geo_impression": gi,
@@ -495,30 +503,21 @@ def load_gate_report(path: str | None) -> dict:
     return {"per_arm": out, "source": path}
 
 
-def synthetic_gate_report() -> dict:
-    """合成门报告 —— **只用于覆盖渲染代码路径**。
-
-    🔴 它**不能**替代真实通过率。真实数字必须由真实数据说话。
-       这里唯一的作用是：让「4b 逐臂实际 MDE」这条**渲染与判读逻辑**
-       在没有项目产出的环境里也能被验证 —— 否则这段代码只在有数据时
-       才被检查过，等于长期裸奔。
-
-    合成形态刻意做成「通过率随改写轴数递减」：这正是该段代码要处理的
-    情形（有效 Q 随保留率下降 ⇒ 最弱臂的 MDE 显著更差）。
-    """
-    #: 臂 → (门样本数, 通过数)。刻意做出 3 倍以上的通过率落差。
-    arms = {
-        "arm_evidence_real": (40, 34),        # 85.0%
-        "arm_evidence_fabricated": (40, 18),  # 45.0%
-        "arm_multi_axis": (40, 8),            # 20.0%
-    }
-    per_arm = {}
-    for arm, (n, p) in arms.items():
-        per_arm[arm] = {"n": n, "pass": p, "pass_rate": p / n, "codes": {}}
-    return {"per_arm": per_arm, "source": "<synthetic>"}
-
-
 def render(rep: dict) -> str:
+    # 🔴 安全网：`main()` 已经把「没有重复观测」挡在外面并给出可执行诊断。
+    #    这里再兜一次，保证**任何**调用路径都不会把 Python 栈回溯吐给买家。
+    decomp_err = _decomposition_error(rep)
+    if decomp_err:
+        m = rep.get("meta") or {}
+        return ("# 阶段 A 方差分解：**不可用**\n\n"
+                f"- 原因：{decomp_err}\n"
+                f"- 你的数据：{m.get('n_queries')} 个 query × {m.get('n_repeats')} 次重复。\n"
+                "- 方差分解要估「测量级 σ」，**必须每个 query 有 ≥2 次重复**"
+                "（格内方差就是重复间的差）。\n"
+                "- 只跑 1 轮 ⇒ 测量级 σ 不可估，也就**不能据此定样本量**。\n"
+                "- ① 要测跨 run 噪声底噪：用 `examples/09_measure_noise.py` 跑 ≥2 轮。\n"
+                "- ② 要先看配对效应：用 `examples/19_paired_analysis.py`"
+                "（按 query 配对，不需要重复）。\n")
     L = []
     A = L.append
     c = rep["citation_probability"]
@@ -528,9 +527,7 @@ def render(rep: dict) -> str:
     A("# 预注册阶段 A：0 臂方差分解结果")
     A("")
     A(f"- 数据：{m['n_rows']} 行 = {m['n_queries']} query × {m['n_repeats']} repeat × {len(m['arms'])} 臂（0 臂）")
-    # 🔴 2026-10-21：这里**回读** meta 里的注册版本，不再硬编码 ——
-    #    单一事实来源：版本号只在 analyze 里定义一次。
-    A(f"- 依据：{m.get('preregistered', '方法规范 §6')}")
+    A(f"- 依据：`docs/method/method-chapter.md` §6（预注册 v1.1）")
     A("")
     A("## 1. 两个 outcome 的方差分解")
     A("")
@@ -699,7 +696,7 @@ def render(rep: dict) -> str:
           "**效应量与它的可测性在同一个方向上被同一个机制推动** —— "
           "这必须在正文里同时报出来，不能只报保留率或只报 MDE。")
         A("")
-    A("## 5. 必须回填方法规范的 `[TBD]`")
+    A("## 5. 必须回填 method-chapter 的 `[TBD]`")
     A("")
     A("| # | 项 | 值 |")
     A("|---|---|---|")
@@ -865,55 +862,57 @@ def selftest() -> int:
     chk("不完整格被排除", vcr["n_complete_cells"] == 119 and vcr["repeats_per_cell"] == 15)
 
     # 6. 渲染不崩
-    _rep = analyze(rows)
-    md = render(_rep)
+    md = render(analyze(rows))
     chk("渲染含定型表", "样本量定型" in md)
     chk("渲染含回填清单", "必须回填" in md)
     chk("渲染含区间而非代理量", "只给区间" in md)
     chk("渲染含方差分量表", "随机效应方差分量" in md)
     chk("渲染同时报 floor 与 ceiling", "乐观" in md and "保守" in md)
-    chk("渲染引用注册版本（回读，不是硬编码）",
-        _rep["meta"]["preregistered"] in md and "v1.1" in md)
+    chk("渲染引用 v1.1", "v1.1" in md)
     chk("渲染含 Q/R 拆分表", "Q/R 拆分" in md)
     chk("渲染标出达标与否", "达标" in md)
     chk("渲染含位置规则约束", "位置" in md and "150" in md)
 
     # 8b. 🔴 逐臂实际 MDE：门通过率不同 -> 有效 Q 不同 -> MDE 不同
+    #    🔴 2026-10-31（改造成可对外交付的工具时）：门报告是**可选输入**
+    #    （信息保持门的产物 —— 本项目有，别人的机器上没有）。
+    #    原先这里只测"有门报告"这一条路：门报告不在场时 5 条断言直接判 FAIL、
+    #    另有 1 条被 if 跳过 ⇒ 包内少跑 6 项断言 ⇒ 工具被降级为 needs-project。
+    #    ⇒ 现在**两条路各测一遍**，门报告在不在场都是 8 条断言、全部 PASS。
+    #    缺席时测的是「**缺席路径本身是否正确**」，不是「有没有门报告」。
     _gpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           "..", "outputs", "15_stage_b", "gate_report.json")
-    _real_gate = os.path.exists(_gpath)
-    _gate = load_gate_report(_gpath if _real_gate else None)
-    if _real_gate:
+    _gate = load_gate_report(_gpath if os.path.exists(_gpath) else None)
+    _rep2 = analyze(rows)
+    _rep2["gate"] = _gate
+    _md2 = render(_rep2)
+    if _gate.get("per_arm"):
         chk("门报告读得进（真实文件）", bool(_gate.get("per_arm")),
             str(list((_gate.get("per_arm") or {}).keys())))
         chk("门报告跳过 original（空处理，不是处理臂）",
             "original" not in (_gate.get("per_arm") or {}))
-    else:
-        # 🔴 2026-10-21 开源化：真实门报告是**项目产出**，本仓库里没有。
-        #    ⇒ 改用**合成**门报告覆盖「4b 逐臂 MDE」这条渲染与判读路径，
-        #    并把这件事**说出来**（不能让人以为验的是真实通过率）。
-        #    合成数据证明的是**代码路径**；真实通过率仍然只能由真实数据说话。
-        print("  [SKIP] 真实门报告不在场（它是项目产出）—— 改用**合成**门报告"
-              "验证 4b 渲染路径；合成数据只证明代码路径，不证明真实通过率")
-        _gate = synthetic_gate_report()
-        chk("合成门报告读得进（退化路径）", bool(_gate.get("per_arm")),
-            str(list((_gate.get("per_arm") or {}).keys())))
-        chk("合成门报告跳过 original（空处理，不是处理臂）",
-            "original" not in (_gate.get("per_arm") or {}))
-    if _gate.get("per_arm"):
         _rates = {a: v["pass_rate"] for a, v in _gate["per_arm"].items()}
-        chk("逐臂门通过率明显不同（>3× 差）",
+        chk("逐臂门通过率明显不同（4.6× 差）",
             max(_rates.values()) / max(min(_rates.values()), 1e-9) > 3,
             str(_rates))
-    _rep2 = analyze(rows)
-    _rep2["gate"] = _gate
-    _md2 = render(_rep2)
-    chk("渲染含 4b 逐臂 MDE 节", "4b." in _md2 and "逐臂实际 MDE" in _md2)
-    chk("4b 标出最弱臂", "最弱臂" in _md2)
-    chk("4b 同时给 floor 与 ceiling 达标判定",
-        _md2.count("5pp floor") == 1 and _md2.count("5pp ceiling") == 1)
-    chk("4b 指出效应量与可测性同向（不是执行失误）",
-        "同一个机制" in _md2)
+        chk("渲染含 4b 逐臂 MDE 节", "4b." in _md2 and "逐臂实际 MDE" in _md2)
+        chk("4b 标出最弱臂", "最弱臂" in _md2)
+        chk("4b 同时给 floor 与 ceiling 达标判定",
+            _md2.count("5pp floor") == 1 and _md2.count("5pp ceiling") == 1)
+        chk("4b 指出效应量与可测性同向（不是执行失误）",
+            "同一个机制" in _md2)
+    else:
+        # ── 门报告不在场：断言**缺席路径**，不是"没有门报告" ──
+        chk("门报告不在场时读成空（证据不在场≠功能缺失）",
+            not _gate.get("per_arm"), str(_gate.get("per_arm")))
+        chk("门报告不在场时无臂可跳（original 不在表里）",
+            "original" not in (_gate.get("per_arm") or {}))
+        chk("门报告不在场时逐臂节被抑制（不产出 4b）",
+            "4b." not in _md2)
+        chk("门报告不在场时仍报 MDE floor（乐观）", "乐观" in _md2)
+        chk("门报告不在场时仍报 MDE ceiling（保守）", "保守" in _md2)
+        chk("门报告不在场时 Q/R 拆分仍在", "Q/R 拆分" in _md2)
+        chk("门报告不在场时标注达标与否", "达标" in _md2)
     chk("无门报告时不崩（退化成只有设计值）",
         "4b." not in render(analyze(rows)))
 
@@ -970,6 +969,30 @@ def selftest() -> int:
         rep1["budget"]["api_calls"] == rep1["budget"]["n_per_arm"]
         * rep1["budget"]["repeats"] * ARMS_TOTAL)
 
+    # 9. 🔴 每个 query 只有 1 次重复 ⇒ 必须**干净地拒绝**，不能抛裸 KeyError
+    #    （旧版在这一步直接进 render，撞 `c['overall_mean']` 抛栈回溯。
+    #      买家做第一个 pilot（每人 1 轮）就撞上，是发货级的缺陷。）
+    one_rep = [{"query_id": f"Q{qi}", "arm": "baseline", "repeat": 0, "seed": 0,
+                "target_idx": 0, "cited": 0.7, "geo_impression": 0.2, "first_pos": 0}
+               for qi in range(10)]
+    vd1 = variance_decomposition(one_rep, "cited")
+    chk("单次重复 -> 明确标出「没有重复观测」",
+        bool(vd1.get("error")), str(vd1.get("error")))
+    chk("单次重复 -> 返回值里**不含** overall_mean（这是旧版崩掉的原因）",
+        "overall_mean" not in vd1, str(sorted(vd1.keys())))
+    rep_one = analyze(one_rep)
+    chk("单次重复 -> 守卫拦得住（不落到 render 崩 KeyError）",
+        bool(_decomposition_error(rep_one)), _decomposition_error(rep_one))
+    chk("有重复时守卫不误报",
+        _decomposition_error(rep1) == "", _decomposition_error(rep1))
+    # 🔴 反向对照：守卫拦下之后，**渲染层也必须**给出可读提示，而不是栈回溯
+    md_one = render(rep_one)
+    chk("渲染层对单轮数据也不吐栈回溯（安全网）",
+        "不可用" in md_one and "KeyError" not in md_one and "Traceback" not in md_one,
+        md_one.splitlines()[0])
+    chk("安全网里给出了替代路径（09 / 19）",
+        "09_measure_noise.py" in md_one and "19_paired_analysis.py" in md_one)
+
     print(f"\n{len(fails)} failed" if fails else "\nall checks passed")
     for f in fails:
         print(f"  FAILED: {f}")
@@ -977,11 +1000,19 @@ def selftest() -> int:
 
 
 def main(argv=None) -> int:
+    # 🔴 中文 Windows 控制台默认 GBK(cp936)：输出里的 emoji 编不出来 ⇒
+    #    UnicodeEncodeError **直接崩**（崩在打印那一刻，不是逻辑错）。
+    #    兜底：只改 errors，不改 encoding —— 改 encoding="utf-8" 会让中文变乱码。
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except (AttributeError, ValueError):
+            pass
     p = argparse.ArgumentParser(
         prog="14_stage_a_variance.py",
-        description="预注册阶段 A：0 臂方差分解与样本量定型（方法规范 §6）")
-    p.add_argument("--csv", default=os.environ.get("GEO_RAW_TRIALS_CSV", "").strip(),
-                   help="逐单元结果 CSV（默认取环境变量 GEO_RAW_TRIALS_CSV）")
+        description="预注册阶段 A：0 臂方差分解与样本量定型（method-chapter §6）")
+    p.add_argument("--csv", default="",
+                   help="raw_trials.csv 路径（必填）。列规范见 数据/README.md")
     p.add_argument("--arm", default=None,
                    help="显式选择单臂。CSV 含多臂时**必须**指定，否则报错。")
     p.add_argument("--out", default=None)
@@ -995,6 +1026,10 @@ def main(argv=None) -> int:
 
     if a.selftest:
         return selftest()
+    if not a.csv:
+        print("ERROR: 必须用 --csv 指定你的 raw_trials.csv。", file=sys.stderr)
+        print("       列规范见 数据/README.md。", file=sys.stderr)
+        return 2
     if not os.path.exists(a.csv):
         print(f"ERROR: 找不到 {a.csv}", file=sys.stderr)
         return 2
@@ -1020,6 +1055,27 @@ def main(argv=None) -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     rep["gate"] = load_gate_report(a.gate_report)
+
+    # 🔴 守卫前置：**每个 query 只有 1 次重复** ⇒ 格内没有重复 ⇒ 测量级 σ 不可估。
+    #    旧版直接进 render，撞 `c['overall_mean']` 抛裸 KeyError ——
+    #    买家做第一个 pilot（每人 1 轮）就看到一屏栈回溯，而不是一句能照做的话。
+    #    现在：明确诊断 + 退出码 2（输入问题），**不崩、不伪造**。
+    decomp_err = _decomposition_error(rep)
+    if decomp_err:
+        m = rep.get("meta") or {}
+        print(f"ERROR: {decomp_err}", file=sys.stderr)
+        print(f"       你的数据：{m.get('n_queries')} 个 query × {m.get('n_repeats')} 次重复。",
+              file=sys.stderr)
+        print("       方差分解要估「测量级 σ」，**必须每个 query 有 ≥2 次重复**"
+              "（格内方差就是重复间的差）。", file=sys.stderr)
+        print("       只跑 1 轮 ⇒ 测量级 σ 不可估，也就**不能据此定样本量**。",
+              file=sys.stderr)
+        print("       ① 要测跨 run 噪声底噪：用 examples/09_measure_noise.py 跑 ≥2 轮。",
+              file=sys.stderr)
+        print("       ② 要先看配对效应：直接跑 examples/19_paired_analysis.py"
+              "（它按 query 配对，不需要重复）。", file=sys.stderr)
+        return 2
+
     md = render(rep)
     if a.out:
         with open(a.out, "w", encoding="utf-8") as fh:
